@@ -1,13 +1,18 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-palette={8,10,3,12,14,9}
+-- palette={8,10,3,12,14,9}
+palette={8,10}
 ploc={}
 phg=8
 
 selidx=1
 selcol={7,7,7,6,6,6,5,5,5,6,6,6,6,6}
 curselcol=1
+
+active_color=0
+sel_anim={7,7,7,6,6,6,5,5,5,6,6,6,6,6}
+cur_sel_anim=0
 
 function _init()
 	iw=flr(127/count(palette))
@@ -33,12 +38,23 @@ function _update()
 	
 	if selidx < 1 then 
 		selidx=count(palette) 
-		sfx(0)
 	end
 	if selidx > count(palette) then 
 	 selidx=1 
-		sfx(0)
 	end
+
+	if btnp(❎) then
+		active_color=selidx
+		cur_sel_anim=1
+		sfx(2)
+	end
+
+	if cur_sel_anim>0 and cur_sel_anim<count(sel_anim) then
+		cur_sel_anim+=1
+	else
+		cur_sel_anim=0
+	end
+		
 end
 
 function _draw()
@@ -50,6 +66,10 @@ function _draw()
 
 	rect(ploc[selidx], 8, ploc[selidx]+iw, 10+phg, selcol[flr(curselcol)])	
 
+	if cur_sel_anim != 0 then
+		rectfill(ploc[selidx], 8, ploc[selidx]+iw, 10+phg, sel_anim[flr(cur_sel_anim)])				
+	end
+	
 end
 
 
@@ -63,3 +83,4 @@ __gfx__
 __sfx__
 000300000756007550075500854008530095200b5100e510055500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000300000556005550055500554005530055200851008550075500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00040000105501155014550175501a5501f5502355025550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
